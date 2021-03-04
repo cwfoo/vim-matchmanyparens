@@ -59,11 +59,11 @@ color of the innermost pair, add this to your |vimrc|:
 >
     highlight MatchParens0 ctermbg=brown guibg=brown
 <
-By default, `MatchParens0` to `MatchParens9` are the highlight groups used
+By default, MatchParens0 to MatchParens9 are the highlight groups used
 to highlight pairs in code. Refer to |hl-MatchParens0| ... |hl-MatchParens9|.
 The list of highlight groups used for highlighting pairs in code can be
 changed using |g:matchmanyparens_highlight_groups|.
-`MatchParensNonCode` is the highlight group used to highlight the pair in
+MatchParensNonCode is the highlight group used to highlight the pair in
 a string or comment.
 
 To customize settings for specific filetypes only, refer to
@@ -137,28 +137,28 @@ g:matchmanyparens_highlight_groups        *g:matchmanyparens_highlight_groups*
 
 g:matchmanyparens_max_pairs                      *g:matchmanyparens_max_pairs*
     The maximum number of pairs that will be highlighted.
-    This must be set to `1` or greater.
+    This must be set to 1 or greater.
     Note that this number does not include the pair that may be highlighted
-    when |g:matchmanyparens_noncode_enable| is set to `1`.
-    The default is `20`.
+    when |g:matchmanyparens_noncode_enable| is set to 1.
+    The default is 20.
 
 g:matchmanyparens_timeout                          *g:matchmanyparens_timeout*
     Maximum number of milliseconds used for finding each pair.
     Note that this is only valid as a global setting and cannot be set as a
     filetype-specific setting in |g:matchmanyparens_filetype_settings|.
-    The default is `200`.
+    The default is 200.
 
 g:matchmanyparens_extra_matchlines        *g:matchmanyparens_extra_matchlines*
     Number of off-screen lines to search for matching pairs.
-    For example, if set to `20`, the search area will include `20` lines above
-    the visible screen, and `20` lines below the visible screen.
-    The default is `10`.
+    For example, if set to 20, the search area will include 20 lines above
+    the visible screen, and 20 lines below the visible screen.
+    The default is 10.
 
 g:matchmanyparens_noncode_enable            *g:matchmanyparens_noncode_enable*
-    If set to `1`, allow the highlighting of one enclosing pair in a string or
+    If set to 1, allow the highlighting of one enclosing pair in a string or
     comment when the cursor is in a string or comment.
-    If set to `0`, never highlight any pair that is in a string or comment.
-    The default is `1`.
+    If set to 0, never highlight any pair that is in a string or comment.
+    The default is 1.
 
 g:matchmanyparens_noncode_pairs              *g:matchmanyparens_noncode_pairs*
     List of pairs that will be highlighted in strings and comments.
@@ -215,9 +215,9 @@ HIGHLIGHT GROUPS                                   *matchmanyparens-hl-groups*
                                            *hl-MatchParens3* *hl-MatchParens8*
                                            *hl-MatchParens4* *hl-MatchParens9*
 MatchParens0 ... MatchParens9
-    By default, `MatchParens0` to `MatchParens9` are used to highlight pairs,
-    with `MatchParens0` used to highlight the innermost pair.
-    `MatchParens0` to `MatchParens9` are the highlight groups listed in
+    By default, MatchParens0 to MatchParens9 are used to highlight pairs,
+    with MatchParens0 used to highlight the innermost pair.
+    MatchParens0 to MatchParens9 are the highlight groups listed in
     |g:matchmanyparens_highlight_groups| by default.
     These highlight groups will only be used if listed in
     |g:matchmanyparens_highlight_groups|.
