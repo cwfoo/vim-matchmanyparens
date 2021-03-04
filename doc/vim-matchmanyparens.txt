@@ -1,0 +1,241 @@
+*vim-matchmanyparens.txt*
+
+*matchmanyparens* is a plugin for highlighting matching pairs that enclose the
+cursor.
+
+==============================================================================
+CONTENTS                                            *matchmanyparens-contents*
+
+    1. Introduction.....................|matchmanyparens-intro|
+    2. Usage............................|matchmanyparens-usage|
+    3. Configuration options............|matchmanyparens-options|
+    3. Highlight groups.................|matchmanyparens-hl-groups|
+    4. License..........................|matchmanyparens-license|
+    5. Contributing.....................|matchmanyparens-contributing|
+
+==============================================================================
+INTRODUCTION                                           *matchmanyparens-intro*
+
+matchmanyparens is a plugin for highlighting matching pairs that enclose the
+cursor. This plugin is useful for visualizing the nesting levels of deeply
+nested code.
+
+Unlike Vim's default |matchparen| plugin, this plugin:
+* Always highlights matching pairs, not only when the cursor is on the
+  opening or closing character of the pair.
+* Highlights more than one pair at a time.
+
+This plugin attempts to distinguish between pairs in code ("code pairs"),
+and pairs in strings and comments, so that characters in strings and comments
+will not be incorrectly matched with characters in code (and vice-versa).
+
+Opening characters in code will only match closing characters in code. By
+default, up to 20 pairs in the code enclosing the cursor will be highlighted
+in various colors.
+
+An opening character in a string will match a closing character in a string,
+provided that the opening character is enclosed by the same code pair as the
+closing character. When the cursor is within a pair in a string, the code
+pairs surrounding the string will continue to be highlighted (if there are
+any), but only the innermost pair within the string will be highlighted (if
+there is one). Similarly for comments. In other words, this plugin highlights
+many pairs in code, but only one pair in strings and comments. This makes it
+easier to visually distinguish between code and non-code pairs when lots of
+pairs are highlighted.
+
+==============================================================================
+USAGE                                                  *matchmanyparens-usage*
+
+This is a global plugin that is automatically enabled in all buffers.
+
+As this plugin supersedes Vim's |matchparen| plugin, disable matchparen
+globally by adding this to your |vimrc|:
+>
+    let g:loaded_matchparen = 1
+<
+To change the colors used to highlight pairs, you can use the ":highlight"
+command to override the defaults. For example, to change the highlight
+color of the innermost pair, add this to your |vimrc|:
+>
+    highlight MatchParens0 ctermbg=brown guibg=brown
+<
+By default, `MatchParens0` to `MatchParens9` are the highlight groups used
+to highlight pairs in code. Refer to |hl-MatchParens0| ... |hl-MatchParens9|.
+The list of highlight groups used for highlighting pairs in code can be
+changed using |g:matchmanyparens_highlight_groups|.
+`MatchParensNonCode` is the highlight group used to highlight the pair in
+a string or comment.
+
+To customize settings for specific filetypes only, refer to
+|g:matchmanyparens_filetype_settings|.
+
+To disable this plugin for specific filetypes, refer to
+|g:matchmanyparens_disabled_filetypes|.
+
+To disable this plugin globally, add this to your |vimrc|:
+>
+    let g:loaded_matchmanyparens = 1
+<
+Refer to |matchparens-options| for all available configuration options.
+
+==============================================================================
+CONFIGURATION OPTIONS                                *matchmanyparens-options*
+
+The behavior of the plugin can be configured by setting the global variables
+listed below. You may define these global variables in your |vimrc|.
+To define filetype-specific overrides of the global settings, refer to
+|g:matchmanyparens_filetype_settings|.
+
+g:matchmanyparens_pairs                              *g:matchmanyparens_pairs*
+    List of pairs that will be highlighted.
+
+    A pair is a list of two characters, where the first character is the
+    opening character of the pair, and the second character is the
+    closing character of the pair.
+
+    The opening character of a pair must not be the same as its closing
+    character.
+
+    By default, parentheses, square brackets, and curly braces will be
+    highlighted. The default is:
+>
+    let g:matchmanyparens_pairs = [['(', ')'], ['[', ']'], ['{', '}']]
+<
+    Refer to |g:matchmanyparens_noncode_pairs| for the list of pairs that will
+    be highlighted in strings and comments.
+
+g:matchmanyparens_highlight_groups        *g:matchmanyparens_highlight_groups*
+    List of highlight groups used to highlight pairs.
+
+    The list is ordered from innermost to outermost (i.e. the first highlight
+    group will be used for highlighting the innermost enclosing pair, the
+    second highlight group will be used for highlighting the pair that
+    encloses the innermost pair, etc.).
+
+    When there are more pairs to be highlighted than there are highlight
+    groups in the list, the last item in the list will wrap around to the
+    first item.
+
+    There must be at least one highlight group in the list.
+
+    The default is:
+>
+    let g:matchmanyparens_highlight_groups = [
+        \'MatchParens0',
+        \'MatchParens1',
+        \'MatchParens2',
+        \'MatchParens3',
+        \'MatchParens4',
+        \'MatchParens5',
+        \'MatchParens6',
+        \'MatchParens7',
+        \'MatchParens8',
+        \'MatchParens9',
+    \]
+<
+    Refer to |hl-MatchParens0| ... |hl-MatchParens9|.
+
+g:matchmanyparens_max_pairs                      *g:matchmanyparens_max_pairs*
+    The maximum number of pairs that will be highlighted.
+    This must be set to `1` or greater.
+    Note that this number does not include the pair that may be highlighted
+    when |g:matchmanyparens_noncode_enable| is set to `1`.
+    The default is `20`.
+
+g:matchmanyparens_timeout                          *g:matchmanyparens_timeout*
+    Maximum number of milliseconds used for finding each pair.
+    Note that this is only valid as a global setting and cannot be set as a
+    filetype-specific setting in |g:matchmanyparens_filetype_settings|.
+    The default is `200`.
+
+g:matchmanyparens_extra_matchlines        *g:matchmanyparens_extra_matchlines*
+    Number of off-screen lines to search for matching pairs.
+    For example, if set to `20`, the search area will include `20` lines above
+    the visible screen, and `20` lines below the visible screen.
+    The default is `10`.
+
+g:matchmanyparens_noncode_enable            *g:matchmanyparens_noncode_enable*
+    If set to `1`, allow the highlighting of one enclosing pair in a string or
+    comment when the cursor is in a string or comment.
+    If set to `0`, never highlight any pair that is in a string or comment.
+    The default is `1`.
+
+g:matchmanyparens_noncode_pairs              *g:matchmanyparens_noncode_pairs*
+    List of pairs that will be highlighted in strings and comments.
+
+    A pair is a list of two characters, where the first character is the
+    opening character of the pair, and the second character is the
+    closing character of the pair.
+
+    The opening character of a pair must not be the same as its closing
+    character.
+
+    The default value is: [['(', ')'], ['\[', '\]'], ['{', '}']]
+
+g:matchmanyparens_disabled_filetypes    *g:matchmanyparens_disabled_filetypes*
+    List of filetypes for which the plugin is disabled. For example, to
+    disable the highlighting of pairs in help files and log files:
+>
+    let g:matchmanyparens_disabled_filetypes = ['help', 'messages']
+<
+    Note that this is only valid as a global setting and cannot be set as a
+    filetype-specific setting in |g:matchmanyparens_filetype_settings|.
+    The default is an empty list.
+
+g:matchmanyparens_filetype_settings      *g:matchmanyparens_filetype_settings*
+    A dictionary of filetype-specific overrides of the global settings.
+
+    The key of the dictionary should be a filetype, and the value should be
+    a dictionary of settings overrides.
+
+    The key of the dictionary of settings overrides should be the name
+    of the global setting to override, but without the "g:matchmanyparens_"
+    prefix.
+
+    For example:
+>
+    let g:matchmanyparens_filetype_settings = {
+        \'help': {'max_pairs': 1},
+        \'lisp': {
+             \'pairs': [['(', ')']],
+             \'extra_matchlines': 25,
+        \},
+    \}
+<
+    This setting is only valid as a global setting, and cannot be set as a
+    filetype-specific setting.
+    The default is an empty dictionary.
+
+==============================================================================
+HIGHLIGHT GROUPS                                   *matchmanyparens-hl-groups*
+
+                                           *hl-MatchParens0* *hl-MatchParens5*
+                                           *hl-MatchParens1* *hl-MatchParens6*
+                                           *hl-MatchParens2* *hl-MatchParens7*
+                                           *hl-MatchParens3* *hl-MatchParens8*
+                                           *hl-MatchParens4* *hl-MatchParens9*
+MatchParens0 ... MatchParens9
+    By default, `MatchParens0` to `MatchParens9` are used to highlight pairs,
+    with `MatchParens0` used to highlight the innermost pair.
+    `MatchParens0` to `MatchParens9` are the highlight groups listed in
+    |g:matchmanyparens_highlight_groups| by default.
+    These highlight groups will only be used if listed in
+    |g:matchmanyparens_highlight_groups|.
+
+MatchParensNonCode                                     *hl-MatchParensNonCode*
+    Highlight group for the pair in a string or comment.
+
+==============================================================================
+LICENSE                                              *matchmanyparens-license*
+
+This project is distributed under the BSD 3-Clause License (see LICENSE).
+
+==============================================================================
+CONTRIBUTING                                    *matchmanyparens-contributing*
+
+Bug reports, suggestions, and patches should be submitted on GitHub:
+
+    https://github.com/cwfoo/vim-matchmanyparens
+
+==============================================================================
+ vim:tw=78:ts=8:noet:ft=help:norl:
