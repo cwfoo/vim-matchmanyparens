@@ -165,9 +165,10 @@ function! s:find_first_code_pair(pairs, stoplinetop, stoplinebottom)
     let stoplinetop = a:stoplinetop
     let stoplinebottom = a:stoplinebottom
 
+    let current_char = s:get_current_char()
+
     for [open_char, close_char] in a:pairs
         " Get the position of the opening character.
-        let current_char = s:get_current_char()
         if current_char ==# open_char && !s:is_in_string_or_comment()
             let match_open = [line('.'), col('.')]
         else
@@ -247,9 +248,10 @@ function! s:find_string_comment_pair(noncode_pairs, code_pairs,
     let pos_open = [0, 0]
     let pos_close = [0, 0]
 
+    let current_char = s:get_current_char()
+
     for [open_char, close_char] in a:noncode_pairs
         " Get the position of the opening character.
-        let current_char = s:get_current_char()
         if current_char ==# open_char
             let match_open = [line('.'), col('.')]
         else
